@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <title>
+        </title>
+        <link rel="stylesheet" href="css/jquery.mobile-1.3.0.css" type="text/css" />
+        <script src="js/jquery.js" type="text/javascript"></script>
+        <script src="js/jquery.mobile.js" type="text/javascript"></script>
+        <script src="js/game.js" type="text/javascript"></script>
+        <script src="js/levels.js" type="text/javascript"></script>
+        <style> 
+            #grid div div{
+                height:60px;
+            }
+            #grid div{
+                cursor: pointer;
+            }
+        </style>
+        <script>
+            $(document).on("pagebeforechange", function(e, data) {
+                if (typeof data.toPage !== 'string') {
+                    return;
+                }
+                $.mobile.showPageLoadingMsg();
+                var page = data.toPage.toString().split("#");
+                var toPagePrefix = page[0];
+                var toPage = page[1];
+
+                switch (toPage) {
+                    case "game":
+                    case "retry":
+                        new game(level[currentLevel], finishedGame);
+                        toPage = "game";
+                        break;
+                    case "next" :
+                        if (currentLevel < level.length - 1) {
+                            toPage = "game";
+                            new game(level[++currentLevel], finishedGame);
+                        } else {
+                            toPage = "finished";
+                        }
+                        break;
+                    case "pre":
+                        if (currentLevel > 0) {
+                            toPage = "game";
+                            new game(level[--currentLevel], finishedGame);
+                        } else {
+                            toPage = "home";
+                        }
+                        break;
+
+                }
+                data.toPage = toPagePrefix + "#" + toPage;
+                $.mobile.hidePageLoadingMsg();
+            });
+            $('#time').button('disable');
+            var currentLevel = 0; // from persistent
+            function finishedGame(totalMoves, time) {
+                $("#score").html(totalMoves);
+                $("#timeEl").html(time);
+                $.mobile.changePage("#success", {transition: "slideup"});
+            }
+        </script>
+    </head>
+    <body style="text-align: center;">
+        <!-- Home -->
+        <div data-role="page" id="home">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    Lights off
+                </h3>
+            </div>
+            <div data-role="content">
+                <h1>Welcome to Lights off!!</h1>
+                <div data-role="controlgroup">
+                    <a href="#game" data-transition="fade" data-theme="b" data-role="button">Start Game</a>
+                    <a href="#help" data-role="button">Help</a>
+                    <a href="#about" data-role="button">About</a>
+                </div>
+            </div>
+        </div>
+        <!-- Game -->
+        <div data-role="page" id="game">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    Lights off
+                </h3>
+            </div>
+            <div data-role="content" id="grid">
+
+            </div>
+            <div data-role="controlgroup" data-type="horizontal" >
+                <a href="#" id="time" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-shadow ui-btn-corner-all ui-first-child ui-btn-up-c">Time spent : </a>
+                <a href="#retry" data-role="button" data-icon="refresh" data-iconpos="notext">Up</a>
+            </div>
+            <div data-role="tabbar" data-iconpos="top" data-theme="a" data-cid="tabbar3" class="codiqa-control ui-footer ui-footer-fixed ui-bar-a ui-navbar ui-mini" role="navigation">
+                <ul class="ui-grid-b">
+                    <li class="ui-block-a"><a href="#pre" data-transition="fade" data-theme="a" data-icon="arrow-l" class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a" data-corners="false" data-shadow="false" data-iconshadow="true" data-iconsize="18" data-wrapperels="span" data-iconpos="top" data-inline="true"><span class="ui-btn-inner"><span class="ui-btn-text">Previous</span><span class="ui-icon ui-icon-arrow-l ui-icon-shadow ui-iconsize-18">&nbsp;</span></span></a></li>
+                    <li class="ui-block-b"><a href="#home" data-transition="fade" data-theme="a" data-icon="home" class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a" data-corners="false" data-shadow="false" data-iconshadow="true" data-iconsize="18" data-wrapperels="span" data-iconpos="top" data-inline="true"><span class="ui-btn-inner"><span class="ui-btn-text">Home</span><span class="ui-icon ui-icon-home ui-icon-shadow ui-iconsize-18">&nbsp;</span></span></a></li>
+                    <li class="ui-block-c"><a href="#next" data-transition="fade" data-theme="a" data-icon="arrow-r" class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a" data-corners="false" data-shadow="false" data-iconshadow="true" data-iconsize="18" data-wrapperels="span" data-iconpos="top" data-inline="true"><span class="ui-btn-inner"><span class="ui-btn-text">Next</span><span class="ui-icon ui-icon-arrow-r ui-icon-shadow ui-iconsize-18">&nbsp;</span></span></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Success -->
+        <div data-role="page" id="success">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    Lights off
+                </h3>
+            </div>
+            <div data-role="content">
+                <h1>Congratulations !!</h1>
+                <h3>You took <span id="score"></span> moves to complete in <span id="timeEl"></span> seconds.</h3>
+                <div data-role="controlgroup">
+                    <a href="#retry" data-transition="fade" data-theme="b" data-role="button">Retry</a>
+                    <a href="#next" data-transition="fade" data-theme="a" data-role="button">Next Level</a>
+                    <a href="#home" data-role="button">Home</a>
+                    <a href="#about" data-role="button">About</a>
+                </div>
+            </div>
+        </div>
+        <!-- Help -->
+        <div data-role="page" id="help">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    Lights off
+                </h3>
+            </div>
+            <div data-role="content">
+                <h1>How to play</h1>
+                <p>Every time you toggle a light, all the neighbouring lights will also toggle</p>
+                <p>Switch off all the lights with minimum no of turns.</p>
+                <div data-role="controlgroup">
+                    <a href="#home" data-transition="fade" data-theme="b" data-role="button">Home</a>
+                </div>
+            </div>
+        </div>
+        <!-- About -->
+        <div data-role="page" id="about">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    Lights off
+                </h3>
+            </div>
+            <div data-role="content">
+                <p>This is a simple game developed by</p>
+                <h3>Pasindu Perera</h3>
+                <a href="http://www.ideawide.com">www.ideawide.com</a>
+                <div data-role="controlgroup">
+                    <a href="#home" data-transition="fade" data-theme="b" data-role="button">Home</a>
+                </div>
+            </div>
+        </div>
+        <!-- Finised -->
+        <div data-role="page" id="finished">
+            <div data-theme="a" data-role="header">
+                <h3>
+                    Lights off
+                </h3>
+            </div>
+            <div data-role="content">
+                <p>You completed every level of this game.</p>
+                <h3>Check out ideawide for simple games like this.</h3>
+                <a href="http://www.ideawide.com">www.ideawide.com</a>
+                <div data-role="controlgroup">
+                    <a href="#home" data-transition="fade" data-theme="b" data-role="button">Home</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
