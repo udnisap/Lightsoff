@@ -52,7 +52,8 @@
         <gap:plugin name="Example" />
         A list of available plugins are available at https://build.phonegap.com/docs/plugins
     -->
-
+    <icon src="icon.png" />
+    <gap:splash src="splash.png" />
     <!--
         Define access to external domains.
 
