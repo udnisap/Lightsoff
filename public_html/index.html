@@ -12,6 +12,7 @@
         <script src="js/jquery.mobile.js" type="text/javascript"></script>
         <script src="js/game.js" type="text/javascript"></script>
         <script src="js/levels.js" type="text/javascript"></script>
+        <script src="phonegap.js"></script>
         <style> 
             #grid div div{
                 height:60px;
@@ -54,11 +55,12 @@
                         break;
 
                 }
+                window.localStorage.setItem("level", currentLevel);
                 data.toPage = toPagePrefix + "#" + toPage;
                 $.mobile.hidePageLoadingMsg();
             });
             $('#time').button('disable');
-            var currentLevel = 0; // from persistent
+            var currentLevel =  parseInt(window.localStorage.getItem("level")) || 0; // from persistent
             var g ;
             function finishedGame(totalMoves, time) {
                 $("#score").html(totalMoves);
