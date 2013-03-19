@@ -33,13 +33,13 @@
                 switch (toPage) {
                     case "game":
                     case "retry":
-                        new game(level[currentLevel], finishedGame);
+                        g = new game.init(level[currentLevel], finishedGame);
                         toPage = "game";
                         break;
                     case "next" :
                         if (currentLevel < level.length - 1) {
                             toPage = "game";
-                            new game(level[++currentLevel], finishedGame);
+                            g = new game.init(level[++currentLevel], finishedGame);
                         } else {
                             toPage = "finished";
                         }
@@ -47,7 +47,7 @@
                     case "pre":
                         if (currentLevel > 0) {
                             toPage = "game";
-                            new game(level[--currentLevel], finishedGame);
+                            g = new game.init(level[--currentLevel], finishedGame);
                         } else {
                             toPage = "home";
                         }
@@ -59,6 +59,7 @@
             });
             $('#time').button('disable');
             var currentLevel = 0; // from persistent
+            var g ;
             function finishedGame(totalMoves, time) {
                 $("#score").html(totalMoves);
                 $("#timeEl").html(time);
