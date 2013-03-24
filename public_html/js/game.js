@@ -14,9 +14,9 @@ var game = function() {
             $.each(self, function(j) {
                 html += '<div class="ui-block-' + leters[j % 5 ] + ' light">';
                 if (data[i][j] === 1) {
-                    html += '<div class="ui-bar ui-bar-c"></div>';
+                    html += '<div class="ui-bar ui-bar-c"><img src="css/images/home.png"/></div>';
                 } else {
-                    html += '<div class="ui-bar ui-bar-e"></div>';
+                    html += '<div class="ui-bar ui-bar-e"><img src="css/images/home.png"/></div>';
                 }
                 html += '</div>';
             });
