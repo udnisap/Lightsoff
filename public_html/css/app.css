@@ -1,0 +1,6 @@
+#grid div div{
+    height:60px;
+}
+#grid div{
+    cursor: pointer;
+}
